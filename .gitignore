@@ -1,0 +1,18 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# System files
+.DS_Store
+
+# SQLite database
+data.db
+
+# Streamlit temp files
+.streamlit/
+
+# Environment variables (if any)
+.env
