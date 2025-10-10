@@ -1,3 +1,4 @@
+from utils import generate_insights
 # app.py
 import streamlit as st
 from db import init_db, create_user, verify_user, add_transaction, get_transactions_by_user
@@ -71,6 +72,12 @@ def dashboard():
 
     else:
         st.info("No transactions yet.")
+# AI Insights
+st.subheader("AI Insights")
+insights = generate_insights(df)
+for i in insights:
+    st.write(i)
+
 
 
 # ----------- MAIN -----------
