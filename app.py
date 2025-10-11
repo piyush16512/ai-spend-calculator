@@ -23,26 +23,26 @@ def login_page():
     col1, col2 = st.columns(2)
     with col1:
         if st.button("Login"):
-		if not username or not password:
-        		st.error("Please enter both username and password")
-		else:
-            		user = verify_user(username, password)
-            		if user:
-                		st.session_state.user = user
-                		st.success(f"Welcome {username}!")
-            		else:
-                		st.error("Invalid credentials")
+            if not username or not password:
+                st.error("Please enter both username and password")
+            else:
+                user = verify_user(username, password)
+                if user:
+                    st.session_state.user = user
+                    st.success(f"Welcome {username}!")
+                else:
+                    st.error("Invalid credentials")
 
     with col2:
         if st.button("Sign Up"):
-		if not username or not password:
-			st.error("Please enter both username and password")
-		else:
-            		user_id = create_user(username, password)
-            		if user_id != -1:
-                	st.success("Account created! Please login.")
-        else:
-                st.error("Username already exists")
+            if not username or not password:
+                st.error("Please enter both username and password")
+            else:
+                user_id = create_user(username, password)
+                if user_id != -1:
+                    st.success("Account created! Please login.")
+                else:
+                    st.error("Username already exists")
 
 def dashboard():
     # Top bar with logout
