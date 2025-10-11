@@ -1,8 +1,7 @@
-from utils import generate_insights
 # app.py
 import streamlit as st
 from db import init_db, create_user, verify_user, add_transaction, get_transactions_by_user
-from utils import CATEGORIES, to_df, classify_useful_waste
+from utils import CATEGORIES, to_df, classify_useful_waste, generate_insights
 from datetime import datetime
 
 # Initialize database tables
@@ -38,9 +37,17 @@ def login_page():
             else:
                 st.error("Username already exists")
 
-
 # ----------- DASHBOARD -----------
 def dashboard():
+# Top bar with logout
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.title(f"Welcome, {st.session_state.user['username']}")
+    with col2:
+        if st.button("Logout"):
+            st.session_state.user = None
+            st.success("Logged out successfully!")
+            st.experimental_rerun()   # reloads the app
     st.title(f"Welcome, {st.session_state.user['username']}")
     st.subheader("Add Transaction")
 
@@ -70,15 +77,16 @@ def dashboard():
         st.write(f"Wasteful: ₹{summary['wasteful']:.2f}")
         st.write(f"Other: ₹{summary['other']:.2f}")
 
+        # ✅ AI Insights (safe because df exists)
+        st.subheader("AI Insights")
+        insights = generate_insights(df)
+        for i in insights:
+            st.write(i)
+
     else:
         st.info("No transactions yet.")
-# AI Insights
-st.subheader("AI Insights")
-insights = generate_insights(df)
-for i in insights:
-    st.write(i)
-
-
+        st.subheader("AI Insights")
+        st.write("Add some transactions to see AI suggestions!")
 
 # ----------- MAIN -----------
 def main():
