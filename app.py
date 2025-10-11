@@ -1,4 +1,5 @@
 # app.py
+import altair as alt
 import streamlit as st
 from db import init_db, create_user, verify_user, add_transaction, get_transactions_by_user
 from utils import CATEGORIES, to_df, classify_useful_waste, generate_insights
@@ -76,6 +77,41 @@ def dashboard():
         st.write(f"Useful: ₹{summary['useful']:.2f}")
         st.write(f"Wasteful: ₹{summary['wasteful']:.2f}")
         st.write(f"Other: ₹{summary['other']:.2f}")
+
+	# ----------- CHARTS SECTION -----------
+st.subheader("Visualizations")
+
+# 1. Pie Chart: Category-wise spending
+st.write("**Category-wise Spending (Pie Chart)**")
+pie_chart_data = df.groupby("category")["amount"].sum().reset_index()
+pie_chart = alt.Chart(pie_chart_data).mark_arc().encode(
+    theta="amount",
+    color="category",
+    tooltip=["category", "amount"]
+)
+st.altair_chart(pie_chart, use_container_width=True)
+
+# 2. Bar Chart: Monthly spending
+st.write("**Monthly Spending (Bar Chart)**")
+df["month"] = df["date"].dt.to_period("M").astype(str)
+monthly_data = df.groupby("month")["amount"].sum().reset_index()
+bar_chart = alt.Chart(monthly_data).mark_bar().encode(
+    x="month",
+    y="amount",
+    tooltip=["month", "amount"]
+)
+st.altair_chart(bar_chart, use_container_width=True)
+
+# 3. Line Chart: Daily spending trend
+st.write("**Daily Spending Over Time (Line Chart)**")
+line_chart_data = df.groupby("date")["amount"].sum().reset_index()
+line_chart = alt.Chart(line_chart_data).mark_line(point=True).encode(
+    x="date:T",
+    y="amount",
+    tooltip=["date", "amount"]
+)
+st.altair_chart(line_chart, use_container_width=True)
+
 
         # ✅ AI Insights (safe because df exists)
         st.subheader("AI Insights")
