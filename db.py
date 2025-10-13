@@ -116,3 +116,26 @@ def delete_transaction(tx_id: int, user_id: int) -> bool:
     ok = cur.rowcount > 0
     conn.close()
     return ok
+
+# db.py — add at bottom (or replace simpler versions)
+def update_transaction(tx_id: int, user_id: int, date: str, category: str, amount: float, note: str) -> bool:
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE transactions
+        SET date = ?, category = ?, amount = ?, note = ?
+        WHERE id = ? AND user_id = ?
+    """, (date, category, amount, note, tx_id, user_id))
+    conn.commit()
+    changed = cur.rowcount > 0
+    conn.close()
+    return changed
+
+def delete_transaction(tx_id: int, user_id: int) -> bool:
+    conn = get_conn()
+    cur = conn.cursor()
+    cur.execute("DELETE FROM transactions WHERE id = ? AND user_id = ?", (tx_id, user_id))
+    conn.commit()
+    ok = cur.rowcount > 0
+    conn.close()
+    return ok
