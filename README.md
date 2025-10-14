@@ -65,7 +65,7 @@ pip (Python package manager)
 
 Setup
 1. Clone the repository
-git clone https://github.com/yourusername/ai-spend-calculator.git
+git clone https://github.com/piyush16512/ai-spend-calculator.git
 
 cd ai-spend-calculator
 
