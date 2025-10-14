@@ -2,7 +2,7 @@
 
 A smart personal finance tracker that helps you understand your spending habits with AI-powered insights.
 
-**🌟 What is AI Spend Calculator?**
+** What is AI Spend Calculator?**
 
 AI Spend Calculator is a simple yet powerful web app that lets you:
 
@@ -17,7 +17,7 @@ AI Spend Calculator is a simple yet powerful web app that lets you:
 - **Predict future spending** - AI predicts your next month's expenses based on your history
 
 
-🚀 Features
+ **Features**
 
 📱 Easy Transaction Management
 
@@ -30,7 +30,7 @@ AI Spend Calculator is a simple yet powerful web app that lets you:
 - Search and filter your spending history
 
 
-🧠 Smart AI Features
+ **Smart AI Features**
 
 - Auto-categorization: Just type "coffee at Starbucks" and it suggests "Food & Dining"
 
@@ -39,7 +39,7 @@ AI Spend Calculator is a simple yet powerful web app that lets you:
 - Spending Predictions: Get next month's expense estimates
 
 
-📊 Visual Analytics
+** Visual Analytics**
 
 - Pie charts by category
 
@@ -49,7 +49,7 @@ AI Spend Calculator is a simple yet powerful web app that lets you:
 
 - Budget progress tracker
 
-🔒 Privacy First
+ **Privacy First**
 
 - Your data stays on your device
 
@@ -58,7 +58,7 @@ AI Spend Calculator is a simple yet powerful web app that lets you:
 - No sharing of financial information
 
 
-🛠️ Installation
+**🛠️ Installation**
 Prerequisites
 Python 3.7 or higher
 pip (Python package manager)
@@ -82,7 +82,7 @@ pip install -r requirements.txt
 5. Run the application
 streamlit run app.py
 
-📁 Project Structure
+**📁 Project Structure**
 
 ai-spend-calculator/
 
@@ -97,7 +97,7 @@ ai-spend-calculator/
 └── README.md           # This file
 
 
-🎯 How to Use
+ How to Use
 Getting Started
 1. Create an account - Sign up with a username and password
 2. Set your budget - Enter your monthly spending limit
@@ -112,7 +112,7 @@ Adding Transactions
 - Amount: How much you spent
 
 
-🔧 Technical Details
+ **Technical Details**
 
 Built With
 - **Streamlit** - Web app framework
@@ -126,13 +126,13 @@ Built With
 - **Python** - Backend logic
 
 
-AI Features:
+**AI Features:**
 
 - Category Suggestion: Uses keyword matching from transaction notes
 - Useful/Wasteful Classification: Rule-based system for spending analysis
 - Spending Prediction: 3-month moving average forecasting
 
-🤝 Contributing
+**🤝 Contributing**
 
 We welcome contributions! Here's how:
 1. Fork the project
@@ -141,12 +141,12 @@ We welcome contributions! Here's how:
 4. Push to the branch
 5. Open a Pull Request
 
-
-📄 License
+**
+📄 License**
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-👨‍💻 Developer
+**👨‍💻 Developer**
 
 **Piyush Kumar**
 
