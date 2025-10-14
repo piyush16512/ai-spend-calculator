@@ -1,4 +1,3 @@
-# app.py
 import altair as alt
 import streamlit as st
 import pandas as pd
@@ -25,40 +24,54 @@ if "txn_to_edit" not in st.session_state:
     st.session_state.txn_to_edit = None
 if "show_edit_popup" not in st.session_state:
     st.session_state.show_edit_popup = False
-if "dark_mode" not in st.session_state:
-    st.session_state.dark_mode = False
 
 # Initialize DB
 init_db()
 st.set_page_config(page_title="AI Spend Calculator", layout="wide")
 
-# ---------- theme / dark mode ----------
-def apply_plain_css():
-    """Apply CSS for footer and caption based on dark mode"""
-    color = "#ffffff" if st.session_state.dark_mode else "#000000"
-    css = f"""
+# ---------- Apply white text CSS ----------
+def apply_white_text_css():
+    """Apply CSS for white text throughout the app"""
+    css = """
     <style>
-      .footer-center {{
-        text-align: center;
-        font-weight: 700;
-        color: {color};
-        margin-top: 24px;
-      }}
-      .caption-muted {{
-        color: {color};
-        font-size: 0.9rem;
-      }}
+        /* Main text colors */
+        .css-1d391kg, .css-1lcbmhc, .css-1outpf7, .css-1y4p8pa, 
+        .stMarkdown, .stText, .stTitle, .stHeader, .stSubheader,
+        .stButton>button, .stSelectbox, .stTextInput, .stNumberInput,
+        .stDateInput, .stMultiSelect, .stRadio, .stCheckbox,
+        .widget-label, .css-1ue5jrs, .css-1v3fvcr, .css-16idsys,
+        .stAlert, .stProgress, .stSuccess, .stWarning, .stError,
+        .stInfo {
+            color: white !important;
+        }
+        
+        /* Footer and caption */
+        .footer-center {
+            text-align: center;
+            font-weight: 700;
+            color: white;
+            margin-top: 24px;
+        }
+        .caption-muted {
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        /* Dataframe and table text */
+        .dataframe, .stTable {
+            color: white !important;
+        }
+        
+        /* Chart text */
+        .vega-embed summary, .vega-embed .vega-actions {
+            color: white !important;
+        }
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
 
-def set_dark_mode(enabled: bool):
-    st.session_state.dark_mode = enabled
-    apply_plain_css()
-
-# Apply initial CSS
-apply_plain_css()
-
+# Apply CSS
+apply_white_text_css()
 
 # ----------------- LOGIN / SIGNUP -----------------
 def login_page():
@@ -70,6 +83,7 @@ def login_page():
     password = st.text_input("Password", type="password", key="login_password")
 
     col1, col2 = st.columns(2)
+
     with col1:
         if st.button("Login"):
             if not username or not password:
@@ -82,6 +96,7 @@ def login_page():
                     st.rerun()
                 else:
                     st.error("Invalid credentials")
+
     with col2:
         if st.button("Sign Up"):
             if not username or not password:
@@ -93,19 +108,19 @@ def login_page():
                 else:
                     st.success("Account created. Please log in.")
 
-
 # ----------------- DASHBOARD -----------------
 def dashboard_page():
     # Header + controls
     col1, col2, col3 = st.columns([3, 2, 1])
+
     with col1:
         st.title(f"Welcome, {st.session_state.user['username']}")
+
     with col2:
         budget_val = get_budget(st.session_state.user["id"])
         st.write(f"Monthly budget: ₹{budget_val:.2f}")
+
     with col3:
-        dm = st.checkbox("Dark mode", value=st.session_state.dark_mode)
-        set_dark_mode(dm)
         if st.button("Logout"):
             st.session_state.user = None
             st.success("Logged out")
@@ -135,18 +150,23 @@ def dashboard_page():
 
     if not df_all.empty:
         with st.form("filters"):
-            c1, c2, c3, c4 = st.columns([2,2,2,2])
+            c1, c2, c3, c4 = st.columns([2, 2, 2, 2])
+
             with c1:
                 dr = st.date_input("From", value=df_all['date'].min().date())
                 dr2 = st.date_input("To", value=df_all['date'].max().date())
+
             with c2:
                 cat_sel = st.multiselect("Category", options=CATEGORIES, default=CATEGORIES)
+
             with c3:
                 min_amt = st.number_input("Min amount", min_value=0.0, value=0.0)
                 max_amt = st.number_input("Max amount", min_value=0.0, value=float(df_all['amount'].max()))
+
             with c4:
                 q = st.text_input("Search notes or category")
                 sort_by = st.selectbox("Sort by", ["date_desc", "date_asc", "amount_desc", "amount_asc"], index=0)
+
             apply_filters = st.form_submit_button("Apply")
 
         df = df_all.copy()
@@ -155,7 +175,8 @@ def dashboard_page():
             df = df[df['category'].isin(cat_sel)]
             df = df[(df['amount'] >= float(min_amt)) & (df['amount'] <= float(max_amt))]
             if q:
-                df = df[df['note'].str.contains(q, case=False, na=False) | df['category'].str.contains(q, case=False, na=False)]
+                df = df[df['note'].str.contains(q, case=False, na=False) |
+                        df['category'].str.contains(q, case=False, na=False)]
             if sort_by == "date_desc":
                 df = df.sort_values("date", ascending=False)
             elif sort_by == "date_asc":
@@ -177,7 +198,7 @@ def dashboard_page():
                 d_display = row['date'].date()
             except Exception:
                 d_display = row['date']
-            cols = st.columns([2,2,2,4,1,1])
+            cols = st.columns([2, 2, 2, 4, 1, 1])
             cols[0].write(str(d_display))
             cols[1].write(row['category'])
             cols[2].write(f"₹{float(row['amount']):.2f}")
@@ -214,7 +235,8 @@ def dashboard_page():
             save = st.form_submit_button("Save")
             cancel = st.form_submit_button("Cancel")
             if save:
-                ok = update_transaction(int(txn['id']), st.session_state.user['id'], new_date.isoformat(), new_cat, float(new_amt), new_note)
+                ok = update_transaction(int(txn['id']), st.session_state.user['id'],
+                                        new_date.isoformat(), new_cat, float(new_amt), new_note)
                 if ok:
                     st.success("Updated")
                 else:
@@ -268,7 +290,7 @@ def dashboard_page():
         st.altair_chart(
             alt.Chart(pie_data)
             .mark_arc()
-            .encode(theta='amount', color='category', tooltip=['category','amount']),
+            .encode(theta='amount', color='category', tooltip=['category', 'amount']),
             use_container_width=True
         )
 
@@ -278,7 +300,7 @@ def dashboard_page():
         st.altair_chart(
             alt.Chart(monthly)
             .mark_bar()
-            .encode(x='month', y='amount', tooltip=['month','amount']),
+            .encode(x='month', y='amount', tooltip=['month', 'amount']),
             use_container_width=True
         )
 
@@ -287,7 +309,7 @@ def dashboard_page():
         st.altair_chart(
             alt.Chart(daily)
             .mark_line(point=True)
-            .encode(x='date:T', y='amount', tooltip=['date','amount']),
+            .encode(x='date:T', y='amount', tooltip=['date', 'amount']),
             use_container_width=True
         )
 
@@ -309,12 +331,22 @@ def dashboard_page():
     st.subheader("Export")
     if not df_all.empty:
         csv = df_all.to_csv(index=False).encode('utf-8')
-        st.download_button("Download CSV", data=csv, file_name=f"{st.session_state.user['username']}_transactions.csv", mime='text/csv')
+        st.download_button(
+            "Download CSV",
+            data=csv,
+            file_name=f"{st.session_state.user['username']}_transactions.csv",
+            mime='text/csv'
+        )
         towrite = io.BytesIO()
         with pd.ExcelWriter(towrite, engine='xlsxwriter') as writer:
             df_all.to_excel(writer, index=False, sheet_name='Transactions')
             towrite.seek(0)
-            st.download_button("Download Excel", data=towrite, file_name=f"{st.session_state.user['username']}_transactions.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            st.download_button(
+                "Download Excel",
+                data=towrite,
+                file_name=f"{st.session_state.user['username']}_transactions.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
     else:
         st.info("No data to export")
 
@@ -323,7 +355,6 @@ def dashboard_page():
     year = datetime.now().year
     footer_html = f"<div class='footer-center'>© {year} Piyush Kumar – All Rights Reserved</div>"
     st.markdown(footer_html, unsafe_allow_html=True)
-
 
 # ----------------- PROFILE -----------------
 def profile_page():
@@ -345,7 +376,6 @@ def profile_page():
         else:
             st.error("Old password incorrect.")
 
-
 # ----------------- MAIN -----------------
 def main():
     if st.session_state.user is None:
@@ -356,7 +386,6 @@ def main():
             dashboard_page()
         else:
             profile_page()
-
 
 if __name__ == "__main__":
     main()
