@@ -97,7 +97,7 @@ ai-spend-calculator/
 └── README.md           # This file
 
 
- How to Use
+How to Use
 Getting Started
 1. Create an account - Sign up with a username and password
 2. Set your budget - Enter your monthly spending limit
